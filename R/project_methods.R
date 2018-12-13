@@ -173,8 +173,9 @@ getPhiPrey <- getAvailEnergy
 #' }
 getFeedingLevel <- function(object, n, n_pp, avail_energy,
                             time_range, drop=FALSE){
-    if (is(object, "MizerParams")) {
-        if (missing(avail_energy)) {
+    if (is(object, "MizerParamsVariablePPMR")) {
+  # if (is(object, "MizerParams")) {
+       if (missing(avail_energy)) {
             avail_energy <- getAvailEnergy(object, n, n_pp)
         }
         # Check dims of avail_energy
@@ -340,7 +341,8 @@ getPredRate <- function(object, n,  n_pp,
 #' getPredMort(sim, time_range = c(15,20))
 #' }
 getPredMort <- function(object, n, n_pp, pred_rate, time_range, drop = TRUE) {
-    if (is(object, "MizerParams")) {
+  #  if (is(object, "MizerParamsVariablePPMR")) {
+     if (is(object, "MizerParams")) {
         if (missing(pred_rate)) {
             feeding_level <- getFeedingLevel(object, n = n, n_pp = n_pp)
 
@@ -349,7 +351,10 @@ getPredMort <- function(object, n, n_pp, pred_rate, time_range, drop = TRUE) {
         }
         idx_sp <- (length(object@w_full) - length(object@w) + 1):length(object@w_full)
 
-        m2 <- (t(object@interaction) %*% pred_rate)[, idx_sp, drop = FALSE]
+       # m2 <- (t(object@interaction) %*% pred_rate)[, idx_sp, drop = FALSE]
+        
+        m2 <- params@interaction %*% colSums(aperm(predrate, c(2,1,3)),dims=1)[,idx_sp]
+        
         return(m2)
     } else {
         if (missing(time_range)) {
@@ -409,10 +414,14 @@ getPlanktonMort <-
     if ( (!all(dim(pred_rate) ==
                c(nrow(object@species_params), length(object@w_full)))) |
          (length(dim(pred_rate)) != 2)) {
-        stop("pred_rate argument must have 2 dimensions: no. species (",
-             nrow(object@species_params),
-             ") x no. size bins in community + plankton (",
-             length(object@w_full), ")")
+        # stop("pred_rate argument must have 2 dimensions: no. species (",
+        #      nrow(object@species_params),
+        #      ") x no. size bins in community + plankton (",
+        #      length(object@w_full), ")")
+        # 
+     pred_rate <- colSums(aperm(predrate, c(2,1,3)),dims=1)[,]
+     return(pred_rate)
+      
     }
     return(colSums(pred_rate))
 }

@@ -222,8 +222,10 @@ project <- function(params, effort = 0,  t_max = 100, dt = 0.1, t_save=1,
         z <- getMort(sim@params, n = n, n_pp = n_pp, 
                      effort = effort_dt[i_time,], m2 = m2)
         # Calculate mortality on the plankton spectrum
-        m2_background <- getPlanktonMort(sim@params, n = n, n_pp = n_pp,
-                                         pred_rate = pred_rate)
+        #forcing this to work with MizerVariablePPMR
+        m2_background <- colSums(colSums(aperm(pred_rate, c(2,1,3)),dims=1)[,])
+        # m2_background <- getPlanktonMort(sim@params, n = n, n_pp = n_pp,
+        #                                pred_rate = pred_rate)
         # Calculate the resources available for reproduction and growth
         e <- getEReproAndGrowth(sim@params, n = n, n_pp = n_pp, 
                                 feeding_level = feeding_level)
