@@ -419,8 +419,8 @@ getPlanktonMort <-
         #      ") x no. size bins in community + plankton (",
         #      length(object@w_full), ")")
         # 
-     pred_rate <- colSums(aperm(predrate, c(2,1,3)),dims=1)[,]
-     return(pred_rate)
+     pred_rate <- colSums(aperm(pred_rate, c(2,1,3)),dims=1)[,]
+    # return(pred_rate)
       
     }
     return(colSums(pred_rate))
