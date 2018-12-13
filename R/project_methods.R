@@ -353,7 +353,7 @@ getPredMort <- function(object, n, n_pp, pred_rate, time_range, drop = TRUE) {
 
        # m2 <- (t(object@interaction) %*% pred_rate)[, idx_sp, drop = FALSE]
         
-        m2 <- params@interaction %*% colSums(aperm(predrate, c(2,1,3)),dims=1)[,idx_sp]
+        m2 <- params@interaction %*% colSums(aperm(pred_rate, c(2,1,3)),dims=1)[,idx_sp]
         
         return(m2)
     } else {
